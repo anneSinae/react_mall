@@ -12,18 +12,49 @@ class App extends Component {
     this.state = {
       products: data
     };
+    this.renderFoodDetail = this.renderFoodDetail.bind(this);
+
   };
 
-  componentDidMount() {
-    console.log(this.state.products)
-  };
-
+  //제품을 map함수를 이용해 렌더링한다.
+  renderFoodDetail() {
+    return this.state.products.map(product => {
+      return (
+        <Route
+          exact
+          path={`/item/${product.id}`}
+          render={props => {
+            return (
+              <Item
+                image={product.image}
+                name={product.name}
+                price={product.price}
+                id={product.id}
+                key={product.id}
+              />
+            );
+          }}
+        />
+      );
+    });
+  }
   render() {
     return (
       <div>
         <Nav />
         <Switch>
-          <Route exact path="/" component={Main} />
+          <Route
+            exact
+            path="/"
+            render={props => {
+              return (
+                <Main
+                  products={this.state.products}
+                />
+              );
+            }}
+          />
+          {this.renderFoodDetail()}
           <Route exact path="/cart" component={Cart} />
         </Switch>
       </div>

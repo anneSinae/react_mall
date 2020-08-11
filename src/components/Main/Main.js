@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import "components/Main/Main.css";
 
 const Main = props => {
     if(props.products) {
@@ -10,18 +11,22 @@ const Main = props => {
 }
 
 const RenderProducts = props => {
-    return props.products.map((product) => {
+    return (
+      <ul className="products">
+      {props.products.map((product) => {
         return (
-          <div className="product">
+          <li className="product">
             <Link className="productImg" to={`/item/${product.id}`}><img src={product.image} alt="food"/></Link>
             <div className="productName">
               <p className="productTitle">{product.name}</p>
             </div>
-            <hr />
             <p className="productPrice">{product.price.toLocaleString()} 원</p>
-          </div>
+          </li>
         );
-    })
+     })
+    }
+     </ul>
+    )
 };
 
 const RenderLoading = props => (

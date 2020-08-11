@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Nav.css";
+import "components/Nav/Nav.css";
 
 const Navigation = (props, context) => (
   <div className="navigation">
