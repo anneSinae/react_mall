@@ -4,6 +4,7 @@ import Nav from "components/Nav/Nav";
 import Cart from "components/Cart/Cart";
 import Main from "components/Main/Main";
 import Item from "components/Item/Item";
+import axios from 'axios';
 import data from "MOCK_DATA.json";
 
 class App extends Component {
@@ -99,7 +100,13 @@ class App extends Component {
         this.sumTotalAmount();
       })
     }
+    this._getHello();
   };
+
+  _getHello = async() => {
+    const res = await axios.get('/hello');
+    this.setState({ hello : res.data.hello })
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if(prevState.cart !== this.state.cart) {
@@ -137,6 +144,7 @@ class App extends Component {
           />
           {this.renderFoodDetail()}
         </Switch>
+        <div>{this.state.hello}</div>
       </div>
     );
   };
