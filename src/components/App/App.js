@@ -5,13 +5,13 @@ import Cart from "components/Cart/Cart";
 import Main from "components/Main/Main";
 import Item from "components/Item/Item";
 import axios from 'axios';
-import data from "MOCK_DATA.json";
+
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      products: data,
+      products: [],
       cart: [],
       quantity: 1,
       totalAmount: 0
@@ -23,6 +23,7 @@ class App extends Component {
 
   //장바구니에 선택한 물품을 추가하는 method
   handleAddToCart(selectedProducts) {
+    console.log("handleAddToCart");
     let cartItem = this.state.cart;
     let productID = selectedProducts.id;
     if (this.checkProduct(productID)) {
@@ -44,6 +45,7 @@ class App extends Component {
 
   //제품을 map함수를 이용해 렌더링한다.
   renderFoodDetail() {
+    console.log("renderFoodDetail");
     return this.state.products.map(product => {
       return (
         <Route
@@ -70,6 +72,7 @@ class App extends Component {
 
   //장바구니에 이미 제품이 있는지 확인하는 method
   checkProduct(id) {
+    console.log("checkProduct");
     let cart = this.state.cart;
     return cart.some(item => {
       return item.id === id;
@@ -92,6 +95,7 @@ class App extends Component {
 
   componentDidMount() {
     //cart state가 local storage에 있으면 불러오기
+    console.log("componentDidMount");
     let cart = localStorage.cart;
     if(cart) {
       this.setState(prevState => ({
@@ -100,12 +104,13 @@ class App extends Component {
         this.sumTotalAmount();
       })
     }
-    this._getHello();
+    this._getProducts();
   };
 
-  _getHello = async() => {
-    const res = await axios.get('/hello');
-    this.setState({ hello : res.data.hello })
+  _getProducts = async() => {
+    const res = await axios.get('/api/products');
+    const resData = res.data.products;
+    this.setState({ products : resData })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -144,7 +149,6 @@ class App extends Component {
           />
           {this.renderFoodDetail()}
         </Switch>
-        <div>{this.state.hello}</div>
       </div>
     );
   };
