@@ -1,0 +1,9 @@
+{
+    "development" : {
+        "host" : "localhost",
+        "username" : "react_test",
+        "password" : "1111",
+        "database" : "react_test",
+        "dialect" : "mysql"
+    }
+}
