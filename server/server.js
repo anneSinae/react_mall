@@ -2,9 +2,25 @@ const express = require('express');
 const app = express();
 
 const sequelize = require('./models').sequelize;
+const bodyParser = require('body-parser');
+
 sequelize.sync();
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+const {
+    MallTest,
+    Sequelize: { Op }
+  } = require('./models');
+sequelize.query('SET NAMES utf8;');
+
+app.get('/api/products', (req, res) => {
+    MallTest.findAll()
+     .then( result => { res.send(result) })
+     .catch( err => { throw err })
+ }) 
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

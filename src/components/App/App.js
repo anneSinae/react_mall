@@ -16,12 +16,11 @@ class App extends Component {
       quantity: 1,
       totalAmount: 0
     };
-    this.renderFoodDetail = this.renderFoodDetail.bind(this);
+    this.renderProductDetail = this.renderProductDetail.bind(this);
     this.handleAddToCart = this.handleAddToCart.bind(this);
     this.checkProduct = this.checkProduct.bind(this);
   };
 
-  //장바구니에 선택한 물품을 추가하는 method
   handleAddToCart(selectedProducts) {
     console.log("handleAddToCart");
     let cartItem = this.state.cart;
@@ -43,9 +42,7 @@ class App extends Component {
     }
   }
 
-  //제품을 map함수를 이용해 렌더링한다.
-  renderFoodDetail() {
-    console.log("renderFoodDetail");
+  renderProductDetail() {
     return this.state.products.map(product => {
       return (
         <Route
@@ -70,7 +67,6 @@ class App extends Component {
     });
   }
 
-  //장바구니에 이미 제품이 있는지 확인하는 method
   checkProduct(id) {
     console.log("checkProduct");
     let cart = this.state.cart;
@@ -79,7 +75,6 @@ class App extends Component {
     });
   };
 
-  // 장바구니에 담긴 물품들의 가격 총합을 구하는 method
   sumTotalAmount() {
     let cart = this.state.cart;
     let total = 0;
@@ -94,8 +89,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    //cart state가 local storage에 있으면 불러오기
-    console.log("componentDidMount");
     let cart = localStorage.cart;
     if(cart) {
       this.setState(prevState => ({
@@ -109,8 +102,7 @@ class App extends Component {
 
   _getProducts = async() => {
     const res = await axios.get('/api/products');
-    const resData = res.data.products;
-    this.setState({ products : resData })
+    this.setState({ products : res.data })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -147,7 +139,7 @@ class App extends Component {
               );
             }}
           />
-          {this.renderFoodDetail()}
+          {this.renderProductDetail()}
         </Switch>
       </div>
     );
