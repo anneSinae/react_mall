@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
-import Nav from "components/Nav/Nav";
-import Cart from "components/Cart/Cart";
+import Nav from "components/Common/Header";
+import Footer from "components/Common/Footer";
 import Main from "components/Main/Main";
 import Item from "components/Item/Item";
+import Cart from "components/Member/Cart";
+import Mypage from "components/Member/Mypage";
+import { signIn } from 'components/Auth/Auth';
+import AuthRoute from 'components/Auth/AuthRoute';
+import LoginForm from 'components/Auth/LoginForm';
 import axios from 'axios';
 
 
@@ -14,12 +19,14 @@ class App extends Component {
       products: [],
       cart: [],
       quantity: 1,
-      totalAmount: 0
+      totalAmount: 0,
+      user : null
     };
     this.renderProductDetail = this.renderProductDetail.bind(this);
     this.handleAddToCart = this.handleAddToCart.bind(this);
     this.checkProduct = this.checkProduct.bind(this);
   };
+  
 
   handleAddToCart(selectedProducts) {
     console.log("handleAddToCart");
@@ -104,6 +111,10 @@ class App extends Component {
     const res = await axios.get('/api/products');
     this.setState({ products : res.data })
   }
+  _getCstmrs = async() => {
+    const res = await axios.get('/get/cstmrs');
+    this.setState({ products : res.data })
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if(prevState.cart !== this.state.cart) {
@@ -112,13 +123,16 @@ class App extends Component {
   }
 
   render() {
+    
+    const authenticated = this.state.user != null;
+    const login = ({ email, password }) => this.setState({ user : signIn({ email, password }) });
+    const logout = () => this.setState({ user : null });
+
     return (
       <div>
-        <Nav />
+        <Nav authenticated={authenticated} logout={logout} />
         <Switch>
-          <Route
-            exact
-            path="/"
+          <Route exact path="/"
             render={props => {
               return (
                 <Main
@@ -127,9 +141,7 @@ class App extends Component {
               );
             }}
           />
-          <Route
-            exact
-            path="/cart"
+          <Route exact path="/cart"
             render={props => {
               return (
                 <Cart
@@ -140,7 +152,31 @@ class App extends Component {
             }}
           />
           {this.renderProductDetail()}
+          
+          <Route exact path="/login"
+            render={props => (
+              <LoginForm authenticated={authenticated} login={login} {...props} />
+            )}
+          />
+
+          <AuthRoute
+            authenticated={authenticated}
+            path="/mypage"
+            render={props => <Mypage user={this.state.user} {...props} />}
+          />
+
+          {/*
+          <Route exact path="/mypage"
+            render={props => {
+              return (
+                <Mypage user={this.state.user} />
+              );
+            }}
+          />
+          */}
         </Switch>
+
+        <Footer />
       </div>
     );
   };

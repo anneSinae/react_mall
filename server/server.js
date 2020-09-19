@@ -20,7 +20,7 @@ app.get('/api/products', (req, res) => {
     MallTest.findAll()
      .then( result => { res.send(result) })
      .catch( err => { throw err })
- }) 
+ })
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
